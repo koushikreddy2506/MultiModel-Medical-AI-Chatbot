@@ -8,3 +8,4 @@ outputs/
 .env
 .vscode/settings.json
 /medical-ai-assistant-ready.zip
+.hf-cache/

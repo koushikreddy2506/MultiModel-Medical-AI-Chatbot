@@ -9,6 +9,14 @@
       "console": "integratedTerminal"
     },
     {
+      "name": "Medical assistant (CPU model)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/app.py",
+      "args": ["--cpu"],
+      "console": "integratedTerminal"
+    },
+    {
       "name": "Medical assistant (demo interface)",
       "type": "debugpy",
       "request": "launch",

@@ -1,10 +1,13 @@
 """LLaVA, Whisper, and optional Google text-to-speech adapters."""
 
+import os
+import shutil
 import tempfile
 from pathlib import Path
 
 
 MODEL_ID = "llava-hf/llava-1.5-7b-hf"
+CPU_MODEL_ID = "HuggingFaceTB/SmolVLM-256M-Instruct"
 
 
 class LlavaVision:
@@ -63,11 +66,64 @@ class WhisperTranscriber:
         import torch
         import whisper
 
+        if not shutil.which("ffmpeg"):
+            try:
+                import imageio_ffmpeg
+            except ImportError as exc:
+                raise RuntimeError(
+                    "FFmpeg is required for audio. Install FFmpeg or imageio-ffmpeg."
+                ) from exc
+            ffmpeg_dir = Path(tempfile.mkdtemp(prefix="medical-bot-ffmpeg-"))
+            ffmpeg_name = "ffmpeg.exe" if os.name == "nt" else "ffmpeg"
+            ffmpeg_copy = ffmpeg_dir / ffmpeg_name
+            shutil.copy2(imageio_ffmpeg.get_ffmpeg_exe(), ffmpeg_copy)
+            ffmpeg_copy.chmod(ffmpeg_copy.stat().st_mode | 0o111)
+            os.environ["PATH"] = str(ffmpeg_dir) + os.pathsep + os.environ.get("PATH", "")
+
         self.cuda = torch.cuda.is_available()
         self.model = whisper.load_model("base", device="cuda" if self.cuda else "cpu")
 
     def transcribe(self, audio_path):
         return self.model.transcribe(str(audio_path), fp16=self.cuda)["text"]
+
+
+class CpuVision:
+    """Smaller vision model for computers without a CUDA GPU."""
+
+    def __init__(self):
+        import torch
+        from transformers import AutoModelForImageTextToText, AutoProcessor
+
+        self.torch = torch
+        self.processor = AutoProcessor.from_pretrained(CPU_MODEL_ID)
+        self.model = AutoModelForImageTextToText.from_pretrained(
+            CPU_MODEL_ID,
+            dtype=torch.float32,
+            attn_implementation="eager",
+        ).to("cpu")
+        self.model.eval()
+
+    def analyze(self, image_path, question):
+        from PIL import Image
+
+        messages = [{
+            "role": "user",
+            "content": [
+                {"type": "image"},
+                {"type": "text", "text": (
+                    "Describe only what is visible. State uncertainty and do not give "
+                    f"a diagnosis. Question: {question}"
+                )},
+            ],
+        }]
+        prompt = self.processor.apply_chat_template(messages, add_generation_prompt=True)
+        with Image.open(image_path) as source:
+            image = source.convert("RGB")
+        inputs = self.processor(text=prompt, images=[image], return_tensors="pt").to("cpu")
+        with self.torch.inference_mode():
+            output = self.model.generate(**inputs, max_new_tokens=120, do_sample=False)
+        new_tokens = output[0, inputs["input_ids"].shape[-1]:]
+        return self.processor.decode(new_tokens, skip_special_tokens=True).strip() or "The model returned no answer."
 
 
 class GoogleSpeech:
