@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.gradio/
+outputs/
+*.mp3
+.env
+.vscode/settings.json
+/medical-ai-assistant-ready.zip
