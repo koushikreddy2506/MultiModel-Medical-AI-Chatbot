@@ -1,6 +1,6 @@
 # Medical Image Assistant
 
-A VS Code ready version of the [original Colab notebook](https://colab.research.google.com/drive/1Q4tLQC8f0Rl3CDY-Iva_TXYcTl7D_LXC?usp=sharing). It accepts a typed or spoken question and an uploaded image. The default GPU mode uses the notebook's LLaVA 1.5 7B model. The `--cpu` mode uses the smaller SmolVLM 256M model for actual image responses on computers without a CUDA GPU. Whisper Base handles optional speech transcription, and gTTS can make an optional spoken reply. The original notebook is preserved in [`notebooks/original_colab.ipynb`](notebooks/original_colab.ipynb) with its previous outputs removed.
+ It accepts a typed or spoken question and an uploaded image. The default GPU mode uses the notebook's LLaVA 1.5 7B model. The `--cpu` mode uses the smaller SmolVLM 256M model for actual image responses on computers without a CUDA GPU. Whisper Base handles optional speech transcription, and gTTS can make an optional spoken reply. The original notebook is preserved in [`notebooks/original_colab.ipynb`](notebooks/original_colab.ipynb) with its previous outputs removed.
 
 **Research demonstration only.** These are general vision models. Their descriptions can be wrong. Do not use this app for diagnosis, treatment, or medical decisions.
 
