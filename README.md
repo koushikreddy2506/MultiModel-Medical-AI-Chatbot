@@ -16,6 +16,12 @@ The `--demo` mode checks the web interface and input flow without loading AI mod
 
 ## Setup in VS Code
 
+### One-click Windows launcher
+
+Double-click [`run-and-share.bat`](run-and-share.bat), or run it in the VS Code terminal. It creates `.venv` if needed, installs the CPU app dependencies, starts the model, and prints a temporary public URL. It uses an installed `cloudflared` or downloads the official Windows binary into the ignored `.tools` folder. Keep the batch window open while using the link; press Enter in that window to stop the app and tunnel. First launch needs internet and can take several minutes to download model weights. Python 3.10–3.12 must already be installed.
+
+The batch file starts the **SmolVLM CPU mode**. For the original 7B LLaVA mode on an NVIDIA GPU, follow the manual setup below.
+
 Open the `medical-ai-assistant` folder in VS Code, open a terminal, and run:
 
 ### Windows PowerShell

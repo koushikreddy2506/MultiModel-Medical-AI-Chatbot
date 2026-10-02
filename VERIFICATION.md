@@ -15,5 +15,6 @@ Checked on 2026-10-01 in the local Windows workspace with Python 3.12.14.
 | Whisper audio path | Downloaded Whisper Base and processed a generated tone WAV through packaged FFmpeg without error; the transcript was empty, as expected for nonspeech audio. |
 | gTTS audio path | Generated an MP3 from the nonpersonal phrase “This is a test.” |
 | Temporary public tunnel | Cloudflare URL returned HTTP 200. An end-to-end request through it with a generated image and tone returned `Circle` and a spoken reply file. |
+| `run-and-share.bat` | Executed the single-file Windows launcher. It installed/checked dependencies, started CPU mode on an available port, verified the tunnel, and printed a public URL. |
 
 The LLaVA path was **not run** here because this machine has no accessible NVIDIA GPU. Whisper and gTTS were run with generated test data. The CPU image response is from a different small general vision model and is not a medical analysis. The tunnel URL is temporary and depends on this computer staying online.
